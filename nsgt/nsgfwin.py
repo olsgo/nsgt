@@ -44,7 +44,7 @@ def nsgfwin(fmin, fmax ,bins, sr, Ls, min_win=4):
     if fmax > nf:
         fmax = nf
     
-    b = np.ceil(np.log2(fmax/fmin))+1
+    b = int(np.ceil(np.log2(fmax/fmin))+1)
 
     if not _isseq(bins):
         bins = np.ones(b,dtype=int)*bins
@@ -55,9 +55,10 @@ def nsgfwin(fmin, fmax ,bins, sr, Ls, min_win=4):
     
     fbas = []
     for kk,bkk in enumerate(bins):
-        r = np.arange(kk*bkk, (kk+1)*bkk, dtype=float)
-        # TODO: use N.logspace instead
-        fbas.append(2**(r/bkk)*fmin)
+        # Use logspace for more numerically stable computation
+        start_exp = np.log2(fmin) + kk
+        stop_exp = np.log2(fmin) + (kk+1)
+        fbas.append(np.logspace(start_exp, stop_exp, bkk, endpoint=False, base=2))
     fbas = np.concatenate(fbas)
 
     if fbas[np.min(np.where(fbas>=fmax))] >= nf:
@@ -70,11 +71,11 @@ def nsgfwin(fmin, fmax ,bins, sr, Ls, min_win=4):
     fbas = np.concatenate(((0.,), fbas, (nf,), sr-fbas[::-1]))
     fbas *= float(Ls)/sr
     
-    # TODO: put together with array indexing
+    # Vectorized computation for better performance
     M = np.empty(fbas.shape, dtype=int)
     M[0] = np.round(2.*fmin*Ls/sr)
-    for k in range(1, 2*lbas+1):
-        M[k] = np.round(fbas[k+1]-fbas[k-1])
+    # Vectorized calculation for middle elements
+    M[1:2*lbas+1] = np.round(fbas[2:2*lbas+2] - fbas[:2*lbas])
     M[-1] = np.round(Ls-fbas[-2])
     
     M = np.clip(M, min_win, np.inf).astype(int)

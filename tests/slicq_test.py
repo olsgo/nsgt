@@ -1,5 +1,5 @@
 import numpy as np
-from nsgt import NSGT_sliced, OctScale
+from nsgt import NSGT_sliced, OctScale, quality_check
 import unittest
 
 # reproducible noise signal
@@ -22,12 +22,16 @@ class TestNSGT_slices(unittest.TestCase):
 
         s_r = np.concatenate(list(map(list,rc)))[:len(sig)]
         
-        close = np.allclose(sig, s_r, atol=1.e-3)
-        if not close:
+        # Use new quality measurement framework
+        passed, quality_report = quality_check(sig, s_r, tolerance=1.e-3, verbose=False)
+        
+        if not passed:
             print("Failing params:", siglen, fmin, fmax, obins, sllen, trlen, real)
-            dev = np.abs(s_r-sig)
-            print("Error", np.where(dev>1.e-3), np.max(dev))
-        self.assertTrue(close)
+            print(f"Quality Report - SDR: {quality_report['sdr_db']:.2f} dB, "
+                  f"L∞ Error: {quality_report['linf_error']:.2e}, "
+                  f"Spectral Conv: {quality_report['spectral_convergence']:.2e}")
+        
+        self.assertTrue(passed)
 
 
     def test_1d1(self):

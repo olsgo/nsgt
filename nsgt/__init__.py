@@ -33,6 +33,8 @@ __version__ = '0.18'
 from .cq import NSGT, CQ_NSGT
 from .slicq import NSGT_sliced, CQ_NSGT_sliced
 from .fscale import Scale, OctScale, LogScale, LinScale, MelScale
+from .quality import (sdr, sir, sar, spectral_convergence, perfect_reconstruction_error,
+                     comprehensive_quality_report, print_quality_report, quality_check)
 from warnings import warn
 
 try:
