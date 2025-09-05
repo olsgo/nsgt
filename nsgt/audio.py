@@ -23,10 +23,10 @@ try:
 except:
     PySndfile = None
     
-def sndreader(sf, blksz=2**16, dtype=np.float32):
+def sndreader(sf, blksz=2**16, dtype=np.dtype('float32')):
     frames = sf.frames()
     if dtype is float:
-        dtype = np.float64 # scikits.audiolab needs numpy types
+        dtype = np.dtype('float64') # scikits.audiolab needs numpy types
     if blksz < 0:
         blksz = frames
     if sf.channels() > 1: 
@@ -55,7 +55,7 @@ def findfile(fn, path=os.environ['PATH'].split(os.pathsep), matchFunc=os.path.is
 
 
 class SndReader:
-    def __init__(self, fn, sr=None, chns=None, blksz=2**16, dtype=np.float32):
+    def __init__(self, fn, sr=None, chns=None, blksz=2**16, dtype=np.dtype('float32')):
         fnd = False
                 
         if not fnd and (PySndfile is not None):

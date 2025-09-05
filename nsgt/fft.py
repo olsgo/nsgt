@@ -38,12 +38,12 @@ if fftw3 is not None and fftw3f is not None:
             self.dtype = np.dtype(dtype)
             dtsz = self.dtype.itemsize
             if dtsz == 4:
-                self.tpfloat = np.float32
-                self.tpcplx = np.complex64
+                self.tpfloat = np.dtype('float32')
+                self.tpcplx = np.dtype('complex64')
                 self.fftw = fftw3f
             elif dtsz == 8:
-                self.tpfloat = np.float64
-                self.tpcplx = np.complex128
+                self.tpfloat = np.dtype('float64')
+                self.tpcplx = np.dtype('complex128')
                 self.fftw = fftw3
             else:
                 raise TypeError("nsgt.fftpool: dtype '%s' not supported"%repr(self.dtype))
