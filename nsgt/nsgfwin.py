@@ -37,7 +37,35 @@ EXTERNALS : firwin
 import numpy as np
 from .util import hannwin,_isseq
 
-def nsgfwin(fmin, fmax ,bins, sr, Ls, min_win=4):
+def nsgfwin(fmin, fmax, bins, sr, Ls, min_win=4):
+    """
+    Generate windows for Non-Stationary Gabor Transform
+    
+    Args:
+        fmin: Minimum frequency (Hz)
+        fmax: Maximum frequency (Hz) 
+        bins: Number of bins per octave or array of bins
+        sr: Sample rate (Hz)
+        Ls: Signal length (samples)
+        min_win: Minimum window size (samples)
+        
+    Returns:
+        tuple: (windows, frequency_bases, window_lengths)
+        
+    Raises:
+        ValueError: For invalid parameter combinations
+    """
+    # Parameter validation with clear error messages
+    if fmin <= 0:
+        raise ValueError(f"fmin must be positive, got {fmin}")
+    if fmax <= fmin:
+        raise ValueError(f"fmax ({fmax}) must be greater than fmin ({fmin})")
+    if sr <= 0:
+        raise ValueError(f"sr must be positive, got {sr}")
+    if Ls <= 0:
+        raise ValueError(f"Ls must be positive, got {Ls}")
+    if min_win < 1:
+        raise ValueError(f"min_win must be at least 1, got {min_win}")
 
     nf = sr/2
     
