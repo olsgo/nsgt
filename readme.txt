@@ -13,7 +13,12 @@ http://www.perlfoundation.org/artistic_license_2_0
 
 Mandatory dependencies:
 -----------------------
-Numerical Python (http://numpy.scipy.org)
+Numerical Python (http://numpy.scipy.org) - version 1.20.0 or later
+
+Python Requirements:
+--------------------
+Python 3.8 or later (tested up to Python 3.12)
+Optimized for Apple Silicon (ARM64) processors
 
 Optional dependencies:
 -----------------------
@@ -27,6 +32,14 @@ is recommended for using the built-in audio import/streaming functionality (othe
 Installation:
 -------------
 
+Modern installation (recommended):
+pip install nsgt
+
+From source with modern build system:
+python -m build
+pip install dist/nsgt-*.whl
+
+Traditional installation:
 In the console (terminal application) change to the folder containing this readme.txt file.
 
 To build the package run the following command:
@@ -34,6 +47,15 @@ python setup.py build
 
 To install the package (with administrator rights):
 sudo python setup.py install
+
+Apple Silicon Optimization:
+---------------------------
+This package is optimized for Apple Silicon (ARM64) processors with:
+- Native ARM64 compilation flags (-mcpu=apple-a14)
+- Vectorized operations using Apple's SIMD capabilities
+- Optimized Cython extensions when available
+
+See APPLE_SILICON_OPTIMIZATION.md for detailed information.
 
 
 Todo:
