@@ -8,3 +8,12 @@ nsgt/*.c
 ._*
 .DS_Store
 .settings/
+.eggs/
+__pycache__/
+*.egg-info/
+*.whl
+.pytest_cache/
+.coverage
+.venv/
+venv/
+env/
