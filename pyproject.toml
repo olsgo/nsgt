@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "numpy>=1.20.0", "Cython>=0.29.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nsgt"
+version = "0.19"
+description = "Python implementation of Non-Stationary Gabor Transform (NSGT)"
+readme = "readme.txt"
+license = {text = "Artistic License"}
+authors = [
+    {name = "Thomas Grill", email = "gr@grrrr.org"}
+]
+maintainers = [
+    {name = "Thomas Grill", email = "gr@grrrr.org"}
+]
+keywords = ["fourier", "gabor", "transform", "signal-processing"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "License :: OSI Approved :: Artistic License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.20.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "Cython>=0.29.0",
+    "pytest>=6.0",
+    "build>=0.7.0",
+    "twine>=3.0.0",
+]
+fftw = [
+    "pyFFTW>=0.12.0",
+]
+audio = [
+    "pysndfile>=1.4.0",
+    "soundfile>=0.10.0",
+]
+gpu = [
+    "cupy-cuda11x>=10.0.0; platform_machine=='x86_64'",
+    "torch>=1.12.0",
+]
+
+[project.urls]
+Homepage = "http://grrrr.org/nsgt"
+Repository = "https://github.com/olsgo/nsgt"
+
+[tool.setuptools.packages.find]
+include = ["nsgt*"]
+
+[tool.setuptools.package-data]
+nsgt = ["*.pyx"]
+
+# Apple Silicon optimization settings
+[tool.cython.compile_time_env]
+APPLE_SILICON_OPTIMIZED = true
+USE_OPENMP = false

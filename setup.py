@@ -34,6 +34,7 @@ Attention: some Cython versions also need the Pyrex module installed!
 
 import warnings
 import os
+import platform
 
 try:
     import setuptools
@@ -53,19 +54,48 @@ else:
     
 try:
     from Cython.Distutils import build_ext
+    from Cython.Build import cythonize
+    import platform
 except ImportError:
     build_ext = None
-    
+    cythonize = None
 
 if build_ext is None:
     cmdclass = {}
     ext_modules = []
 else:
+    # Apple Silicon optimization flags
+    extra_compile_args = []
+    extra_link_args = []
+    
+    if platform.system() == 'Darwin' and platform.machine() == 'arm64':
+        # Apple Silicon specific optimizations
+        extra_compile_args = ['-O3', '-mcpu=apple-a14', '-ftree-vectorize']
+        extra_link_args = ['-mcpu=apple-a14']
+    elif platform.system() == 'Darwin':
+        # Intel Mac optimizations
+        extra_compile_args = ['-O3', '-march=native', '-ftree-vectorize']
+        extra_link_args = ['-march=native']
+    else:
+        # Generic optimizations for other platforms
+        extra_compile_args = ['-O3', '-ftree-vectorize']
+    
     cmdclass = {'build_ext': build_ext}
     ext_modules = [
-                   Extension("nsgt._nsgtf_loop", ["nsgt/nsgtf_loop.pyx"]),
-                   Extension("nsgt._nsigtf_loop", ["nsgt/nsigtf_loop.pyx"])
+        Extension("nsgt._nsgtf_loop", ["nsgt/nsgtf_loop.pyx"],
+                  extra_compile_args=extra_compile_args,
+                  extra_link_args=extra_link_args),
+        Extension("nsgt._nsigtf_loop", ["nsgt/nsigtf_loop.pyx"],
+                  extra_compile_args=extra_compile_args,
+                  extra_link_args=extra_link_args)
     ]
+    
+    # Use cythonize for better optimization
+    if cythonize is not None:
+        ext_modules = cythonize(ext_modules, 
+                               compiler_directives={'language_level': 3,
+                                                   'boundscheck': False,
+                                                   'wraparound': False})
 
 
 try:
@@ -85,8 +115,8 @@ setup(
     license="Artistic License",
     keywords="fourier gabor",
     url="http://grrrr.org/nsgt",
-    setup_requires=["numpy"],
-    install_requires=["numpy"],
+    setup_requires=["numpy>=1.20.0"],
+    install_requires=["numpy>=1.20.0"],
     include_dirs=INCLUDE_DIRS,
     packages=['nsgt'],
     cmdclass=cmdclass, 
@@ -95,7 +125,16 @@ setup(
         "Development Status :: 4 - Beta",
         "Topic :: Scientific/Engineering :: Mathematics",
         "License :: OSI Approved :: Artistic License",
-        "Programming Language :: Python"
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Operating System :: OS Independent",
+        "Operating System :: MacOS",
+        "Operating System :: POSIX :: Linux",
     ],
+    python_requires=">=3.8",
     **setup_options 
 )
