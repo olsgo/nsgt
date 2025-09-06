@@ -1,0 +1,39 @@
+# Real-time Spectrogram Editor Dependencies
+# Core dependencies for DSP service
+
+# GPU acceleration and tensor operations
+torch>=2.0.0
+nnAudio>=0.3.2
+torchaudio>=2.0.0
+
+# NSGT library (local)
+# Note: install local nsgt package with: pip install -e .
+
+# Audio processing
+librosa>=0.10.0
+soundfile>=0.12.0
+pysndfile>=1.4.0
+
+# IPC and communication
+grpcio>=1.50.0
+grpcio-tools>=1.50.0
+uvloop>=0.17.0
+fastapi>=0.100.0
+uvicorn>=0.23.0
+
+# GPU memory management and optimization
+cupy-cuda11x>=12.0.0  # Adjust CUDA version as needed
+numba>=0.57.0
+
+# Development and testing
+pytest>=7.0.0
+black>=23.0.0
+isort>=5.12.0
+mypy>=1.0.0
+
+# Optional: for DLPack integration
+dlpack>=0.1.0
+
+# Optional: for additional GPU compute
+opencv-python>=4.8.0
+pillow>=10.0.0
